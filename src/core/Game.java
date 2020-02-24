@@ -16,91 +16,73 @@ public class Game {
     private void initObjects() {
         board = new Board();
         createPlayers();
-        board.setPlayers(players);
+        board.setPlayers(playerList);
         printPlayers();
         
         // First player starts the game
-        currentPlayer = players.get(Constants.PLAYER_ONE);
+        currentPlayer = playerList.get(Constants.PLAYER_ONE);
     }
     
     /**
-     * Ask players for their names, and assign them disc colors.
+     * Ask players for their names, and assign them disc colors
      */
     private void createPlayers()
     {
-        //Instantiate member variable 'players'.
-        players = new ArrayList<>();
+        playerList = new ArrayList<>();
         
-        //Loop through each player.
-        for (int i = 0; i < Constants.MAX_PLAYERS; i++)
+        for (int playerIdx = 0; playerIdx < Constants.MAX_PLAYERS; playerIdx++)
         {
-            //Get player name.
-            String playerName = JOptionPane.showInputDialog(null, "Enter player's name");
-            
-            //Make an instance of class Player.
             Player player = new Player();
             
-            //Call method setName.
+            String playerName = JOptionPane.showInputDialog(null, "Enter player's name");
             player.setName(playerName);
             
-            //Assign colors to players.
-            if (i == Constants.PLAYER_ONE)
+            if (playerIdx == Constants.PLAYER_ONE) {
                 player.setDiscColor(Constants.DARK);
-            else if (i == Constants.PLAYER_TWO)
+            } else if (playerIdx == Constants.PLAYER_TWO) {
                 player.setDiscColor(Constants.LIGHT);
+            }
             
-            //Assign initial scores to players.
+            // Players start with two chips
             player.setScore(Constants.TWO);
             
-            //Add the Player instance to the member variable 'players'.
-            players.add(player);
-            
-        }//Closes massive for loop.
-    }///Closes createPlayers method.
+            playerList.add(player);
+        }
+    }
     
-    /*
-        Base method to set up calculateScore.
-    */
-    public void calculateScore()
-    {
-        //Calculate the score for both dark and light.
+    /**
+     * Calculates and set scores for players
+     */
+    public void calculateScore() {
         board.calculateScore();
-        
-        //Set the score for player one as darkCount.
-        players.get(Constants.PLAYER_ONE).setScore(board.getDarkCount());
-        
-        //Set the score for player two as lightCount.
-        players.get(Constants.PLAYER_TWO).setScore(board.getLightCount());
-    }///Closes calculateScore method.
+        playerList.get(Constants.PLAYER_ONE).setScore(board.getDarkCount());
+        playerList.get(Constants.PLAYER_TWO).setScore(board.getLightCount());
+    }
     
-    /*
-        Print player information to the system.
-    */
-    private void printPlayers()
-    {
-        //Print header.
+    /**
+     * Print player information to the system
+     */
+    private void printPlayers() {
         System.out.println("The game has the following players:");
-        
-        //Print information for each player.
-        players.stream().forEach((player) -> {
+        playerList.stream().forEach((player) -> {
             System.out.println("Player " + player.getName() + " is playing disc color " + player.getDiscColor());
         });
-    }///Closes printPlayers method.
+    }
 
     /**
      * @return the players
      */
-    public ArrayList<Player> getPlayers()
+    public ArrayList<Player> getPlayerList()
     {
-        return players;
+        return playerList;
     }
 
     /**
      * @param players the players to set
      */
-    public void setPlayers(ArrayList<Player> players)
+    public void setPlayerList(ArrayList<Player> players)
     {
-        this.players = players;
+        this.playerList = players;
     }
 
     /**
@@ -135,7 +117,7 @@ public class Game {
         this.currentPlayer = currentPlayer;
     }
     
-    private ArrayList<Player> players;
+    private ArrayList<Player> playerList;
     public Board board;
     private Player currentPlayer;
 }

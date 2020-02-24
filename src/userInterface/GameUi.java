@@ -54,7 +54,7 @@ public class GameUi extends JPanel
         //Player one's information to be displayed at the top.
         nameOne = new JLabel();
         nameOne.setIcon(discOne);
-        nameOne.setText(getGame().getPlayers().get(Constants.PLAYER_ONE).getName());
+        nameOne.setText(getGame().getPlayerList().get(Constants.PLAYER_ONE).getName());
         nameOne.setMinimumSize(new Dimension(200, 50));
         nameOne.setPreferredSize(new Dimension(200, 50));
         nameOne.setBackground(Color.LIGHT_GRAY);
@@ -69,7 +69,7 @@ public class GameUi extends JPanel
         //Player two's information to be displayed at the top.
         nameTwo = new JLabel();
         nameTwo.setIcon(discTwo);
-        nameTwo.setText(getGame().getPlayers().get(Constants.PLAYER_TWO).getName());
+        nameTwo.setText(getGame().getPlayerList().get(Constants.PLAYER_TWO).getName());
         nameTwo.setMinimumSize(new Dimension(200, 50));
         nameTwo.setPreferredSize(new Dimension(200, 50));
         nameTwo.setBackground(Color.LIGHT_GRAY);

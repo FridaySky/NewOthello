@@ -144,10 +144,10 @@ public class BoardUi extends JPanel
         private void changePlayer()
         {
             //Change the player's turn.
-            if (game.getCurrentPlayer() == game.getPlayers().get(Constants.PLAYER_ONE))
-                game.setCurrentPlayer(game.getPlayers().get(Constants.PLAYER_TWO));
+            if (game.getCurrentPlayer() == game.getPlayerList().get(Constants.PLAYER_ONE))
+                game.setCurrentPlayer(game.getPlayerList().get(Constants.PLAYER_TWO));
             else
-                game.setCurrentPlayer(game.getPlayers().get(Constants.PLAYER_ONE));
+                game.setCurrentPlayer(game.getPlayerList().get(Constants.PLAYER_ONE));
 
         }///Closes changePlayers method.
         
@@ -186,8 +186,8 @@ public class BoardUi extends JPanel
             }//Closes outer for loop.
             
             //Update the scores for the game UI.
-            gameUi.getScoreOne().setText(String.valueOf(game.getPlayers().get(Constants.PLAYER_ONE).getScore()));
-            gameUi.getScoreTwo().setText(String.valueOf(game.getPlayers().get(Constants.PLAYER_TWO).getScore()));
+            gameUi.getScoreOne().setText(String.valueOf(game.getPlayerList().get(Constants.PLAYER_ONE).getScore()));
+            gameUi.getScoreTwo().setText(String.valueOf(game.getPlayerList().get(Constants.PLAYER_TWO).getScore()));
             
         }///Closes updateUi function.
         

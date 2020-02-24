@@ -1,54 +1,35 @@
-/*
- * Kevin Tran
- * COP 3330, Section 0001
- * University of Central Florida
- * (slightly refactored on 11/3/2017, but realized it wasn't worth the effort)
- */
-
 package core;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Kevin Tran
- */
 public class Board
 {
-    // Member variables.
-    private Disc[][] board;
-    private int darkCount;
-    private int lightCount;
-    private ArrayList<Player> players;
-    
-    // Constructor that calls a method.
-    public Board()
-    {
+    public Board() {
         initObjects();
     }
     
     /**
-     * Make the board and set the four initial pieces in the center of the board.
+     * Make the board and set the four initial pieces in the center of the board
      */
-    private void initObjects()
-    {
-        // Declare the size of board.
+    private void initObjects() {
         board = new Disc[Constants.ROWS][Constants.COLUMNS];
         
-        // Initialize each object in the array.
-        for (int row = 0; row < Constants.ROWS; row++)
-            for (int col = 0; col < Constants.COLUMNS; col++)
+        // Place an invisible disc at each tile
+        for (int row = 0; row < Constants.ROWS; row++) {
+            for (int col = 0; col < Constants.COLUMNS; col++) {
                 board[row][col] = new Disc();
+            }
+        }
         
-        // Compute the starting positions of the board.
-        int topMiddleRow = Constants.ROWS/2 - 1;
-        int bottomMiddleRow = Constants.ROWS/2;
-        int leftMiddleColumn = Constants.COLUMNS/2 - 1;
-        int rightMiddleColumn = Constants.COLUMNS/2;
+        // Get the starting positions of the board
+        int topMiddleRow      = Constants.ROWS / 2 - 1;
+        int bottomMiddleRow   = Constants.ROWS / 2;
+        int leftMiddleColumn  = Constants.COLUMNS / 2 - 1;
+        int rightMiddleColumn = Constants.COLUMNS / 2;
     
-        // Assign colors to the starting positions.
+        // Set disc colors on the starting positions
         board[topMiddleRow][leftMiddleColumn].setDiscColor(Constants.LIGHT);
         board[topMiddleRow][rightMiddleColumn].setDiscColor(Constants.DARK);
         board[bottomMiddleRow][leftMiddleColumn].setDiscColor(Constants.DARK);
@@ -56,166 +37,173 @@ public class Board
     }
     
     /**
-     * Calculate the player scores.
+     * Calculate the player scores
      */
-    public void calculateScore()
-    {
-        // Initialize the scores.
+    public void calculateScore() {
+        // Initialize scores
         darkCount = 0;
         lightCount = 0;
         
-        // Loop through 2D array and check for dark and light. Increment counters respectively.
-        for (int row = 0; row < Constants.ROWS; row++)
-        {
-            for (int col = 0; col < Constants.COLUMNS; col++)
-            {
-                if (board[row][col].getDiscColor() == Constants.DARK)
+        // Look through board to count number of dark and light discs
+        for (int row = 0; row < Constants.ROWS; row++) {
+            for (int col = 0; col < Constants.COLUMNS; col++) {
+                if (board[row][col].getDiscColor() == Constants.DARK) {
                     darkCount++;
-                else if (board[row][col].getDiscColor() == Constants.LIGHT)
+                }
+                else if (board[row][col].getDiscColor() == Constants.LIGHT) {
                     lightCount++;
+                }
             }
         }
         
-        // Update the players' scores!
+        // Update scores
         players.get(Constants.PLAYER_ONE).setScore(darkCount);
         players.get(Constants.PLAYER_TWO).setScore(lightCount);
     }
     
     /**
-     * Row is the clicked row. Col is the clicked column. Color is the current player's disc color.
-     * This method determines whether the user click is even a valid move.
+     * This method determines whether the user made a valid move
+     * 
+     * @param selectedRow the row of the selected tile
+     * @param selectedCol the column of the selected tile
+     * @param currentPlayerColor the color of the current player
+     * 
+     * @return whether the move was valid
      */
-    public boolean isValidMove(int row, int col, Color color)
-    {
-        // Initialize the move to invalid.
-        boolean valid = false;
+    public boolean isValidMove(int selectedRow, int selectedCol, Color currentPlayerColor) {
+        boolean isValidMove = false;
         
-        // Check all directions to see if the discs can be flipped.
-        if (checkUp(row, col, color)) //1
-            valid = true;
-        if (checkUpLeft(row, col, color)) //2
-            valid = true;
-        if (checkLeft(row, col, color)) //3
-            valid = true;
-        if (checkDownLeft(row, col, color)) //4
-            valid = true;
-        if (checkDown(row, col, color)) //5
-            valid = true;
-        if (checkDownRight(row, col, color)) //6
-            valid = true;
-        if (checkRight(row, col, color)) //7
-            valid = true;
-        if (checkUpRight(row, col, color)) //8
-            valid = true;
-        
-        // Compute the score after each move.
-        calculateScore();
-        
-        //---------------------------------------
-        
-        // This variable serves to keep track of the next player's color.
-        Color nextColor;
-        
-        // If it is the dark player's turn, then we set nextColor equal to the light player's color.
-        if (color == getPlayers().get(Constants.PLAYER_ONE).getDiscColor())
-            nextColor = getPlayers().get(Constants.PLAYER_TWO).getDiscColor();
-        
-        // Otherwise if it is the light player's turn, then we set nextColor equal to the dark player's color.
-        else
-            nextColor = getPlayers().get(Constants.PLAYER_ONE).getDiscColor();
-        
-        // Determine if the game is over from the next player's perspective.
-        if (gameOver(nextColor, darkCount, lightCount))
-        {
-            // Notify the players that the game is over!
-            JOptionPane.showMessageDialog(null, "The game is over!");
-
-            // Check to see if player one has won. If so, notify the players!
-            if (darkCount > lightCount)
-                JOptionPane.showMessageDialog(null, "Player " + getPlayers().get(Constants.PLAYER_ONE).getName() + " wins!");
+        // Check all directions to see if the discs can be flipped
+        if (checkUp(selectedRow, selectedCol, currentPlayerColor) ||
+            checkUpLeft(selectedRow, selectedCol, currentPlayerColor) ||
+            checkLeft(selectedRow, selectedCol, currentPlayerColor) ||
+            checkDownLeft(selectedRow, selectedCol, currentPlayerColor) ||
+            checkDown(selectedRow, selectedCol, currentPlayerColor) ||
+            checkDownRight(selectedRow, selectedCol, currentPlayerColor) ||
+            checkRight(selectedRow, selectedCol, currentPlayerColor) ||
+            checkUpRight(selectedRow, selectedCol, currentPlayerColor)) {
             
-            // Else, check to see if player two has won. Notify the players if that is the case.
-            else if (darkCount < lightCount)
-                JOptionPane.showMessageDialog(null, "Player " + getPlayers().get(Constants.PLAYER_TWO).getName() + " wins!");
-            
-            // Otherwise, the game has ended in a tie!
-            else
-                JOptionPane.showMessageDialog(null, "The game has ended in a draw!");
-            
+            isValidMove = true;
+            calculateScore();
+            isGameOver(currentPlayerColor);
         }
 
-        return valid;
+        return isValidMove;
     }
     
     /**
-     *  Row is the clicked row. Col is the clicked column. Color is the current player's disc color.
-     *  Method determines whether the discs can be flipped in this direction.
-    */
-    private boolean checkUp(int row, int col, Color color)
+     * 
+     * @param currentPlayerColor
+     */
+    private void isGameOver(Color currentPlayerColor) {
+        Color nextColor = getNextColor(currentPlayerColor);
+
+        // Determine if the game is over from the next player's perspective.
+        if (gameOver(nextColor, darkCount, lightCount))
+        {
+            JOptionPane.showMessageDialog(null, "The game is over!");
+            if (darkCount > lightCount) {
+                JOptionPane.showMessageDialog(null, "Player " + getPlayers().get(Constants.PLAYER_ONE).getName() + " wins!");
+            } else if (darkCount < lightCount) {
+                JOptionPane.showMessageDialog(null, "Player " + getPlayers().get(Constants.PLAYER_TWO).getName() + " wins!");
+            } else {
+                JOptionPane.showMessageDialog(null, "The game has ended in a draw!");
+            }
+        }
+    }
+    
+    /**
+     * Get the color of the next player
+     * 
+     * @param currentPlayerColor the color of the current player
+     * 
+     * @return the color of the next player
+     */
+    private Color getNextColor(Color currentPlayerColor) {
+        Color nextColor;
+        
+        if (currentPlayerColor == getPlayers().get(Constants.PLAYER_ONE).getDiscColor()) {
+            nextColor = getPlayers().get(Constants.PLAYER_TWO).getDiscColor();
+        } else {
+            nextColor = getPlayers().get(Constants.PLAYER_ONE).getDiscColor();
+        }
+            
+        return nextColor;
+    }
+    
+    /**
+     * Determine whether discs can be flipped in the up direction
+     * 
+     * @param selectedRow the row of the selected tile
+     * @param selectedCol the column of the selected tile
+     * @param currentPlayerColor the color of the current player
+     * 
+     * @return whether the discs can be flipped in the up direction
+     */
+    private boolean checkUp(int selectedRow, int selectedCol, Color currentPlayerColor)
     {
-        //Early initializations.
-        int flipSquares = 0;
-        int checkRow = row - 1; //row-1 because we are not checking the current row.
         boolean matchFound = false;
         boolean validMove = false;
         
-        //If there are still rows to check and if we haven't found our color on the other end.
-        while (checkRow >= 0 && !matchFound)
-        {
-            //If the next square is empty, this is not a valid move.
-            if (board[checkRow][col].getDiscColor() == Constants.EMPTY)
+        int flippedTiles = 0;
+        int checkRow = selectedRow - 1; // Don't check the current row
+        
+        // If there are still rows to check and if we haven't found our color on the other end
+        while (checkRow >= 0 && !matchFound) {
+            
+            // Invalid move if adjacent tile is empty
+            if (board[checkRow][selectedCol].getDiscColor() == Constants.EMPTY) {
                 return validMove;
+            }
+                
             
-            //If the next square is of the opposite color, that square gets flipped.
-            else if (board[checkRow][col].getDiscColor() != color)
-                flipSquares++;
+            // If the next square is of the opposite color, that square gets flipped
+            else if (board[checkRow][selectedCol].getDiscColor() != currentPlayerColor) {
+                flippedTiles++;
+            }
+                
             
-            //Ends the sequence of flipping since we've ran into a square that is of the player's color.
-            else
+            // Ends the flipping sequence since we've ran into a square that matches the player's color
+            else {
                 matchFound = true;
-            
-            //Check the next row.
+            }
+                
+            // Check the row above
             checkRow--;
-            
-        }//Closes while loop.
+        }
         
-        //If the user move's is valid:
-        if (matchFound && flipSquares > 0)
-        {
-            //Place the new disc.
-            board[row][col].setDiscColor(color);
-            
-            while (flipSquares > 0)
-            {
-                //Bookkeeping.
-                row--;
-                flipSquares--;
+        // Valid move
+        if (matchFound && flippedTiles > 0) {
+            board[selectedRow][selectedCol].setDiscColor(currentPlayerColor);
+
+            while (flippedTiles > 0) {
+                selectedRow--;
+                flippedTiles--;
                 
-                //Update the disc color for the flipped discs.
-                board[row][col].setDiscColor(color);
-                
-            }//Closes while loop.
-            
-            //User move is valid.
+                // Update the disc color for the flipped discs
+                board[selectedRow][selectedCol].setDiscColor(currentPlayerColor);
+            }
             validMove = true;
-            
-        }//Closes if statement.
-        
-        //User move is false.
-        else
+        } else {
             validMove = false;
+        }
         
         return validMove;
-    }///Closes checkUp method.
+    }
 
-    /*
-        Row is the clicked row. Col is the clicked column. Color is the current player's disc color.
-        Method determines whether the discs can be flipped in this direction.
-    */
+    /**
+     * Determine whether discs can be flipped in the northwest direction
+     * 
+     * @param selectedRow the row of the selected tile
+     * @param selectedCol the column of the selected tile
+     * @param currentPlayerColor the color of the current player
+     * 
+     * @return whether the discs can be flipped in the up direction
+     */
     private boolean checkUpLeft(int row, int col, Color color)
     {
         //Early initializations.
-        int flipSquares = 0;
+        int flippedTiles = 0;
         int checkRow = row - 1; //row-1 because we are not checking the current row.
         int checkCol = col - 1; //col-1 because we are not checking the current column.
         boolean matchFound = false;
@@ -230,9 +218,9 @@ public class Board
             
             //If the next square is of the opposite color, that square gets flipped.
             else if (board[checkRow][checkCol].getDiscColor() != color)
-                flipSquares++;
+                flippedTiles++;
             
-            //Ends the sequence of flipping since we've ran into a square that is of the player's color.
+            // Ends the flipping sequence since we've ran into a square that matches the player's color
             else
                 matchFound = true;
             
@@ -243,17 +231,17 @@ public class Board
         }//Closes while loop.
         
         //If the user move's is valid:
-        if (matchFound && flipSquares > 0)
+        if (matchFound && flippedTiles > 0)
         {
             //Place the new disc.
             board[row][col].setDiscColor(color);
             
-            while (flipSquares > 0)
+            while (flippedTiles > 0)
             {
                 //Bookkeeping.
                 row--;
                 col--;
-                flipSquares--;
+                flippedTiles--;
                 
                 //Update the disc color for the flipped discs.
                 board[row][col].setDiscColor(color);
@@ -279,7 +267,7 @@ public class Board
     private boolean checkLeft(int row, int col, Color color)
     {
         //Early initializations.
-        int flipSquares = 0;
+        int flippedTiles = 0;
         int checkCol = col - 1; //col-1 because we are not checking the current column.
         boolean matchFound = false;
         boolean validMove = false;
@@ -293,9 +281,9 @@ public class Board
             
             //If the next square is of the opposite color, that square gets flipped.
             else if (board[row][checkCol].getDiscColor() != color)
-                flipSquares++;
+                flippedTiles++;
             
-            //Ends the sequence of flipping since we've ran into a square that is of the player's color.
+            // Ends the flipping sequence since we've ran into a square that matches the player's color
             else
                 matchFound = true;
             
@@ -305,16 +293,16 @@ public class Board
         }//Closes while loop.
         
         //If the user move's is valid:
-        if (matchFound && flipSquares > 0)
+        if (matchFound && flippedTiles > 0)
         {
             //Place the new disc.
             board[row][col].setDiscColor(color);
             
-            while (flipSquares > 0)
+            while (flippedTiles > 0)
             {
                 //Bookkeeping.
                 col--;
-                flipSquares--;
+                flippedTiles--;
                 
                 //Update the disc color for the flipped discs.
                 board[row][col].setDiscColor(color);
@@ -340,7 +328,7 @@ public class Board
     private boolean checkDownLeft(int row, int col, Color color)
     {
         //Early initializations.
-        int flipSquares = 0;
+        int flippedTiles = 0;
         int checkRow = row + 1; //row+1 because we are not checking the current row.
         int checkCol = col - 1; //col-1 because we are not checking the current column.
         boolean matchFound = false;
@@ -355,9 +343,9 @@ public class Board
             
             //If the next square is of the opposite color, that square gets flipped.
             else if (board[checkRow][checkCol].getDiscColor() != color)
-                flipSquares++;
+                flippedTiles++;
             
-            //Ends the sequence of flipping since we've ran into a square that is of the player's color.
+            // Ends the flipping sequence since we've ran into a square that matches the player's color.
             else
                 matchFound = true;
             
@@ -368,17 +356,17 @@ public class Board
         }//Closes while loop.
         
         //If the user move's is valid:
-        if (matchFound && flipSquares > 0)
+        if (matchFound && flippedTiles > 0)
         {
             //Place the new disc.
             board[row][col].setDiscColor(color);
             
-            while (flipSquares > 0)
+            while (flippedTiles > 0)
             {
                 //Bookkeeping.
                 row++;
                 col--;
-                flipSquares--;
+                flippedTiles--;
                 
                 //Update the disc color for the flipped discs.
                 board[row][col].setDiscColor(color);
@@ -404,7 +392,7 @@ public class Board
     private boolean checkDown(int row, int col, Color color)
     {
         //Early initializations.
-        int flipSquares = 0;
+        int flippedTiles = 0;
         int checkRow = row + 1; //row+1 because we are not checking the current row
         boolean matchFound = false;
         boolean validMove = false;
@@ -418,9 +406,9 @@ public class Board
             
             //If the next square is of the opposite color, that square gets flipped.
             else if (board[checkRow][col].getDiscColor() != color)
-                flipSquares++;
+                flippedTiles++;
             
-            //Ends the sequence of flipping since we've ran into a square that is of the player's color.
+            // Ends the flipping sequence since we've ran into a square that matches the player's color
             else
                 matchFound = true;
             
@@ -430,17 +418,17 @@ public class Board
         }//Closes while loop.
         
         //If the user move's is valid:
-        if (matchFound && flipSquares > 0)
+        if (matchFound && flippedTiles > 0)
         {
             //Place the new disc.
             board[row][col].setDiscColor(color);
             
             //Flip the squares.
-            while (flipSquares > 0)
+            while (flippedTiles > 0)
             {
                 //Bookkeeping.
                 row++;
-                flipSquares--;
+                flippedTiles--;
                 
                 //Update the disc color for the flipped discs.
                 board[row][col].setDiscColor(color);
@@ -466,7 +454,7 @@ public class Board
     private boolean checkDownRight(int row, int col, Color color)
     {
         //Early initializations.
-        int flipSquares = 0;
+        int flippedTiles = 0;
         int checkRow = row + 1; //row+1 because we are not checking the current row.
         int checkCol = col + 1;//col+1 because we are not checking the current column.
         boolean matchFound = false;
@@ -481,9 +469,9 @@ public class Board
             
             //If the next square is of the opposite color, that square gets flipped.
             else if (board[checkRow][checkCol].getDiscColor() != color)
-                flipSquares++;
+                flippedTiles++;
             
-            //Ends the sequence of flipping since we've ran into a square that is of the player's color.
+            // Ends the flipping sequence since we've ran into a square that matches the player's color
             else
                 matchFound = true;
             
@@ -494,17 +482,17 @@ public class Board
         }//Closes while loop.
         
         //If the user move's is valid:
-        if (matchFound && flipSquares > 0)
+        if (matchFound && flippedTiles > 0)
         {
             //Place the new disc.
             board[row][col].setDiscColor(color);
             
-            while (flipSquares > 0)
+            while (flippedTiles > 0)
             {
                 //Bookkeeping.
                 row++;
                 col++;
-                flipSquares--;
+                flippedTiles--;
                 
                 //Update the disc color for the flipped discs.
                 board[row][col].setDiscColor(color);
@@ -530,7 +518,7 @@ public class Board
     private boolean checkRight(int row, int col, Color color)
     {
         //Early initializations.
-        int flipSquares = 0;
+        int flippedTiles = 0;
         int checkCol = col + 1; //col+1 because we are not checking the current column.
         boolean matchFound = false;
         boolean validMove = false;
@@ -544,9 +532,9 @@ public class Board
             
             //If the next square is of the opposite color, that square gets flipped.
             else if (board[row][checkCol].getDiscColor() != color)
-                flipSquares++;
+                flippedTiles++;
             
-            //Ends the sequence of flipping since we've ran into a square that is of the player's color.
+            // Ends the flipping sequence since we've ran into a square that matches the player's color
             else
                 matchFound = true;
             
@@ -556,16 +544,16 @@ public class Board
         }//Closes while loop.
         
         //If the user move's is valid:
-        if (matchFound && flipSquares > 0)
+        if (matchFound && flippedTiles > 0)
         {
             //Place the new disc.
             board[row][col].setDiscColor(color);
             
-            while (flipSquares > 0)
+            while (flippedTiles > 0)
             {
                 //Bookkeeping.
                 col++;
-                flipSquares--;
+                flippedTiles--;
                 
                 //Update the disc color for the flipped discs.
                 board[row][col].setDiscColor(color);
@@ -591,7 +579,7 @@ public class Board
     private boolean checkUpRight(int row, int col, Color color)
     {
         //Early initializations.
-        int flipSquares = 0;
+        int flippedTiles = 0;
         int checkRow = row - 1; //row-1 because we are not checking the current row.
         int checkCol = col + 1;//col+1 because we are not checking the current column.
         boolean matchFound = false;
@@ -600,15 +588,15 @@ public class Board
         //If there are still rows and columns to check and if we haven't found our color on the other end.
         while (checkRow >= 0 && checkCol < Constants.COLUMNS && !matchFound)
         {
-            //If the next square is empty, this is not a valid move.
+            // If the next square is empty, this is not a valid move.
             if (board[checkRow][checkCol].getDiscColor() == Constants.EMPTY)
                 return validMove;
             
-            //If the next square is of the opposite color, that square gets flipped.
+            // If the next square is of the opposite color, that square gets flipped.
             else if (board[checkRow][checkCol].getDiscColor() != color)
-                flipSquares++;
+                flippedTiles++;
             
-            //Ends the sequence of flipping since we've ran into a square that is of the player's color.
+            // Ends the flipping sequence since we've ran into a square that matches the player's color
             else
                 matchFound = true;
             
@@ -619,17 +607,17 @@ public class Board
         }//Closes while loop.
         
         //If the user move's is valid:
-        if (matchFound && flipSquares > 0)
+        if (matchFound && flippedTiles > 0)
         {
             //Place the new disc.
             board[row][col].setDiscColor(color);
             
-            while (flipSquares > 0)
+            while (flippedTiles > 0)
             {
                 //Bookkeeping.
                 row--;
                 col++;
-                flipSquares--;
+                flippedTiles--;
                 
                 //Update the disc color for the flipped discs.
                 board[row][col].setDiscColor(color);
@@ -1130,4 +1118,8 @@ public class Board
         this.players = players;
     }
     
-}///Closes class Board.
+    private Disc[][] board;
+    private int darkCount;
+    private int lightCount;
+    private ArrayList<Player> players;
+}
