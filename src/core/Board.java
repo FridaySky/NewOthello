@@ -145,40 +145,40 @@ public class Board
         boolean matchFound = false;
         boolean validMove = false;
         
-        int flippedTiles = 0;
-        int checkRow = selectedRow - 1; // Don't check the current row
+        int tilesToFlip = 0;
+        int rowToCheck = selectedRow - 1; // Don't check the current row
         
-        // If there are still rows to check and if we haven't found our color on the other end
-        while (checkRow >= 0 && !matchFound) {
+        // While there are still rows to check and if we haven't found our color on the other end
+        while (rowToCheck >= 0 && !matchFound) {
             
             // Invalid move if adjacent tile is empty
-            if (board[checkRow][selectedCol].getDiscColor() == Constants.EMPTY) {
+            if (board[rowToCheck][selectedCol].getDiscColor() == Constants.EMPTY) {
                 return validMove;
             }
                 
             
             // If the next square is of the opposite color, that square gets flipped
-            else if (board[checkRow][selectedCol].getDiscColor() != currentPlayerColor) {
-                flippedTiles++;
+            else if (board[rowToCheck][selectedCol].getDiscColor() != currentPlayerColor) {
+                tilesToFlip++;
             }
                 
             
-            // Ends the flipping sequence since we've ran into a square that matches the player's color
+            // Ends the flipping sequence since we've ran into a square that matches the current player's color
             else {
                 matchFound = true;
             }
                 
             // Check the row above
-            checkRow--;
+            rowToCheck--;
         }
         
         // Valid move
-        if (matchFound && flippedTiles > 0) {
+        if (matchFound && tilesToFlip > 0) {
             board[selectedRow][selectedCol].setDiscColor(currentPlayerColor);
 
-            while (flippedTiles > 0) {
+            while (tilesToFlip > 0) {
                 selectedRow--;
-                flippedTiles--;
+                tilesToFlip--;
                 
                 // Update the disc color for the flipped discs
                 board[selectedRow][selectedCol].setDiscColor(currentPlayerColor);
@@ -198,464 +198,453 @@ public class Board
      * @param selectedCol the column of the selected tile
      * @param currentPlayerColor the color of the current player
      * 
-     * @return whether the discs can be flipped in the up direction
+     * @return whether the discs can be flipped in the northwest direction
      */
-    private boolean checkUpLeft(int row, int col, Color color)
+    private boolean checkUpLeft(int selectedRow, int selectedCol, Color color)
     {
-        //Early initializations.
-        int flippedTiles = 0;
-        int checkRow = row - 1; //row-1 because we are not checking the current row.
-        int checkCol = col - 1; //col-1 because we are not checking the current column.
         boolean matchFound = false;
         boolean validMove = false;
         
-        //If there are still rows and columns to check and if we haven't found our color on the other end.
-        while (checkRow >= 0 && checkCol >= 0 && !matchFound)
-        {
-            //If the next square is empty, this is not a valid move.
-            if (board[checkRow][checkCol].getDiscColor() == Constants.EMPTY)
+        int tilesToFlip = 0;
+        int rowToCheck = selectedRow - 1; // Don't check the current row
+        int columnToCheck = selectedCol - 1; // Don't check the current column
+        
+        
+        // While there are still rows to check and if we haven't found our color on the other end
+        while (rowToCheck >= 0 && columnToCheck >= 0 && !matchFound) {
+            
+            // Invalid move if adjacent tile is empty
+            if (board[rowToCheck][columnToCheck].getDiscColor() == Constants.EMPTY) {
                 return validMove;
+            }
             
-            //If the next square is of the opposite color, that square gets flipped.
-            else if (board[checkRow][checkCol].getDiscColor() != color)
-                flippedTiles++;
+            // If the next square is of the opposite color, that square gets flipped
+            else if (board[rowToCheck][columnToCheck].getDiscColor() != color) {
+                tilesToFlip++;
+            }
             
-            // Ends the flipping sequence since we've ran into a square that matches the player's color
-            else
+            // Ends the flipping sequence since we've ran into a square that matches the current player's color
+            else {
                 matchFound = true;
-            
-            //Check the next row and column.
-            checkRow--;
-            checkCol--;
-            
-        }//Closes while loop.
+            }
+                
+            // Check the row above and the column to the left
+            rowToCheck--;
+            columnToCheck--;
+        }
         
-        //If the user move's is valid:
-        if (matchFound && flippedTiles > 0)
-        {
-            //Place the new disc.
-            board[row][col].setDiscColor(color);
+        // Valid move
+        if (matchFound && tilesToFlip > 0) {
+            board[selectedRow][selectedCol].setDiscColor(color);
             
-            while (flippedTiles > 0)
-            {
-                //Bookkeeping.
-                row--;
-                col--;
-                flippedTiles--;
+            while (tilesToFlip > 0) {
+                selectedRow--;
+                selectedCol--;
+                tilesToFlip--;
                 
-                //Update the disc color for the flipped discs.
-                board[row][col].setDiscColor(color);
-                
-            }//Closes while loop.
-            
-            //User move is valid.
+                // Update the disc color for the flipped discs
+                board[selectedRow][selectedCol].setDiscColor(color);
+            }
             validMove = true;
-            
-        }//Closes if statement.
-        
-        //User move is false.
-        else
+        } else {
             validMove = false;
-        
+        }
+            
         return validMove;
-    }///Closes checkUpLeft method.
+    }
 
-    /*
-        Row is the clicked row. Col is the clicked column. Color is the current player's disc color.
-        Method determines whether the discs can be flipped in this direction.
-    */
-    private boolean checkLeft(int row, int col, Color color)
+    /**
+     * Determine whether discs can be flipped in the left direction
+     * 
+     * @param selectedRow the row of the selected tile
+     * @param selectedCol the column of the selected tile
+     * @param currentPlayerColor the color of the current player
+     * 
+     * @return whether the discs can be flipped in the left direction
+     */
+    private boolean checkLeft(int selectedRow, int selctedCol, Color color)
     {
-        //Early initializations.
-        int flippedTiles = 0;
-        int checkCol = col - 1; //col-1 because we are not checking the current column.
         boolean matchFound = false;
         boolean validMove = false;
         
-        //If there are still columns to check and if we haven't found our color on the other end.
-        while (checkCol >= 0 && !matchFound)
-        {
-            //If the next square is empty, this is not a valid move.
-            if (board[row][checkCol].getDiscColor() == Constants.EMPTY)
+        int tilesToFlip = 0;
+        int columnToCheck = selctedCol - 1; // Don't check the current column
+        
+        
+        // While there are still rows to check and if we haven't found our color on the other end
+        while (columnToCheck >= 0 && !matchFound) {
+            
+            // Invalid move if adjacent tile is empty
+            if (board[selectedRow][columnToCheck].getDiscColor() == Constants.EMPTY) {
                 return validMove;
+            }
+                
+            // If the next square is of the opposite color, that square gets flipped
+            else if (board[selectedRow][columnToCheck].getDiscColor() != color) {
+                tilesToFlip++;
+            }
             
-            //If the next square is of the opposite color, that square gets flipped.
-            else if (board[row][checkCol].getDiscColor() != color)
-                flippedTiles++;
-            
-            // Ends the flipping sequence since we've ran into a square that matches the player's color
-            else
+            // Ends the flipping sequence since we've ran into a square that matches the current player's color
+            else {
                 matchFound = true;
-            
-            //Check the next column.
-            checkCol--;
-            
-        }//Closes while loop.
+            }
+                
+            // Check the column to the left
+            columnToCheck--;
+        }
         
-        //If the user move's is valid:
-        if (matchFound && flippedTiles > 0)
-        {
-            //Place the new disc.
-            board[row][col].setDiscColor(color);
+        // Valid move
+        if (matchFound && tilesToFlip > 0) {
+            board[selectedRow][selctedCol].setDiscColor(color);
             
-            while (flippedTiles > 0)
-            {
-                //Bookkeeping.
-                col--;
-                flippedTiles--;
+            while (tilesToFlip > 0) {
+                selctedCol--;
+                tilesToFlip--;
                 
-                //Update the disc color for the flipped discs.
-                board[row][col].setDiscColor(color);
-                
-            }//Closes while loop.
-            
-            //User move is valid.
+                // Update the disc color for the flipped discs
+                board[selectedRow][selctedCol].setDiscColor(color);
+            }
             validMove = true;
-            
-        }//Closes if statement.
-        
-        //User move is false.
-        else
+        } else {
             validMove = false;
-        
-        return validMove;
-    }///Closes checkLeft method.
+        }
 
-    /*
-        Row is the clicked row. Col is the clicked column. Color is the current player's disc color.
-        Method determines whether the discs can be flipped in this direction.
-    */
-    private boolean checkDownLeft(int row, int col, Color color)
+        return validMove;
+    }
+
+    /**
+     * Determine whether discs can be flipped in the southwest direction
+     * 
+     * @param selectedRow the row of the selected tile
+     * @param selectedCol the column of the selected tile
+     * @param currentPlayerColor the color of the current player
+     * 
+     * @return whether the discs can be flipped in the southwest direction
+     */
+    private boolean checkDownLeft(int selectedRow, int selectedCol, Color color)
     {
-        //Early initializations.
-        int flippedTiles = 0;
-        int checkRow = row + 1; //row+1 because we are not checking the current row.
-        int checkCol = col - 1; //col-1 because we are not checking the current column.
         boolean matchFound = false;
         boolean validMove = false;
         
-        //If there are still rows and columns to check and if we haven't found our color on the other end.
-        while (checkRow < Constants.ROWS && checkCol >= 0 && !matchFound)
-        {
-            //If the next square is empty, this is not a valid move.
-            if (board[checkRow][checkCol].getDiscColor() == Constants.EMPTY)
+        int tilesToFlip = 0;
+        int rowToCheck = selectedRow + 1; // Don't check the current row
+        int columnToCheck = selectedCol - 1; // Don't check the current column
+        
+        
+        // While there are still rows to check and if we haven't found our color on the other end
+        while (rowToCheck < Constants.ROWS && columnToCheck >= 0 && !matchFound) {
+            
+            // Invalid move if adjacent tile is empty
+            if (board[rowToCheck][columnToCheck].getDiscColor() == Constants.EMPTY) {
                 return validMove;
+            }
+                
+            // If the next square is of the opposite color, that square gets flipped
+            else if (board[rowToCheck][columnToCheck].getDiscColor() != color) {
+                tilesToFlip++;
+            }
             
-            //If the next square is of the opposite color, that square gets flipped.
-            else if (board[checkRow][checkCol].getDiscColor() != color)
-                flippedTiles++;
-            
-            // Ends the flipping sequence since we've ran into a square that matches the player's color.
-            else
+            // Ends the flipping sequence since we've ran into a square that matches the current player's color.
+            else {
                 matchFound = true;
+            }
             
-            //Check the next row and column.
-            checkRow++;
-            checkCol--;
-            
-        }//Closes while loop.
+            // Check the row below and the column to the left
+            rowToCheck++;
+            columnToCheck--;
+        }
         
-        //If the user move's is valid:
-        if (matchFound && flippedTiles > 0)
-        {
-            //Place the new disc.
-            board[row][col].setDiscColor(color);
+        // Valid move
+        if (matchFound && tilesToFlip > 0) {
+            board[selectedRow][selectedCol].setDiscColor(color);
             
-            while (flippedTiles > 0)
-            {
-                //Bookkeeping.
-                row++;
-                col--;
-                flippedTiles--;
+            while (tilesToFlip > 0) {
+                selectedRow++;
+                selectedCol--;
+                tilesToFlip--;
                 
-                //Update the disc color for the flipped discs.
-                board[row][col].setDiscColor(color);
-                
-            }//Closes while loop.
-            
-            //User move is valid.
+                // Update the disc color for the flipped discs
+                board[selectedRow][selectedCol].setDiscColor(color);
+            }
             validMove = true;
-            
-        }//Closes if statement.
-        
-        //User move is false.
-        else
+        } else {
             validMove = false;
+        }
         
         return validMove;
-    }///Closes checkDownLeft method.
+    }
     
-    /*
-        Row is the clicked row. Col is the clicked column. Color is the current player's disc color.
-        Method determines whether the discs can be flipped in this direction.
-    */
-    private boolean checkDown(int row, int col, Color color)
+    /**
+     * Determine whether discs can be flipped in the down direction
+     * 
+     * @param selectedRow the row of the selected tile
+     * @param selectedCol the column of the selected tile
+     * @param currentPlayerColor the color of the current player
+     * 
+     * @return whether the discs can be flipped in the down direction
+     */
+    private boolean checkDown(int selectedRow, int selectedCol, Color color)
     {
-        //Early initializations.
-        int flippedTiles = 0;
-        int checkRow = row + 1; //row+1 because we are not checking the current row
         boolean matchFound = false;
         boolean validMove = false;
         
-        //If there are still rows to check and if we haven't found our color on the other end.
-        while (checkRow < Constants.ROWS && !matchFound)
-        {
-            //If the next is empty, this is not a valid move.
-            if (board[checkRow][col].getDiscColor() == Constants.EMPTY)
+        int tilesToFlip = 0;
+        int rowToCheck = selectedRow + 1; // Don't check the current row
+        
+        // While there are still rows to check and if we haven't found our color on the other end
+        while (rowToCheck < Constants.ROWS && !matchFound) {
+            
+            // Invalid move if adjacent tile is empty
+            if (board[rowToCheck][selectedCol].getDiscColor() == Constants.EMPTY) {
                 return validMove;
+            }
+                
             
-            //If the next square is of the opposite color, that square gets flipped.
-            else if (board[checkRow][col].getDiscColor() != color)
-                flippedTiles++;
-            
-            // Ends the flipping sequence since we've ran into a square that matches the player's color
-            else
+            // If the next square is of the opposite color, that square gets flipped
+            else if (board[rowToCheck][selectedCol].getDiscColor() != color) {
+                tilesToFlip++;
+            }
+                
+            // Ends the flipping sequence since we've ran into a square that matches the current player's color
+            else {
                 matchFound = true;
-            
-            //Check the next row.
-            checkRow++;
-            
-        }//Closes while loop.
-        
-        //If the user move's is valid:
-        if (matchFound && flippedTiles > 0)
-        {
-            //Place the new disc.
-            board[row][col].setDiscColor(color);
-            
-            //Flip the squares.
-            while (flippedTiles > 0)
-            {
-                //Bookkeeping.
-                row++;
-                flippedTiles--;
+            }
                 
-                //Update the disc color for the flipped discs.
-                board[row][col].setDiscColor(color);
-                
-            }//Closes while loop.
-            
-            //User move is valid.
-            validMove = true;
-            
-        }//Closes if statement.
+            // Check the row below
+            rowToCheck++;
+        }
         
-        //User move is false.
-        else
+        // Valid move
+        if (matchFound && tilesToFlip > 0) {
+            board[selectedRow][selectedCol].setDiscColor(color);
+            
+            while (tilesToFlip > 0) {
+                selectedRow++;
+                tilesToFlip--;
+                
+                // Update the disc color for the flipped discs
+                board[selectedRow][selectedCol].setDiscColor(color);
+            }
+            validMove = true;   
+        } else {
             validMove = false;
+        }
         
         return validMove;
-    }///Closes checkDown method.
+    }
     
-    /*
-        Row is the clicked row. Col is the clicked column. Color is the current player's disc color.
-        Method determines whether the discs can be flipped in this direction.
-    */
-    private boolean checkDownRight(int row, int col, Color color)
+    /**
+     * Determine whether discs can be flipped in the southeast direction
+     * 
+     * @param selectedRow the row of the selected tile
+     * @param selectedCol the column of the selected tile
+     * @param currentPlayerColor the color of the current player
+     * 
+     * @return whether the discs can be flipped in the southeast direction
+     */
+    private boolean checkDownRight(int selectedRow, int selectedCol, Color color)
     {
-        //Early initializations.
-        int flippedTiles = 0;
-        int checkRow = row + 1; //row+1 because we are not checking the current row.
-        int checkCol = col + 1;//col+1 because we are not checking the current column.
         boolean matchFound = false;
         boolean validMove = false;
         
-        //If there are still rows and columns to check and if we haven't found our color on the other end.
-        while (checkRow < Constants.ROWS && checkCol < Constants.COLUMNS && !matchFound)
-        {
-            //If the next square is empty, this is not a valid move.
-            if (board[checkRow][checkCol].getDiscColor() == Constants.EMPTY)
+        int tilesToFlip = 0;
+        int rowToCheck = selectedRow + 1; // Don't check the current row
+        int columnToCheck = selectedCol + 1; // Don't check the current column
+        
+        
+        // While there are still rows and columns to check and if we haven't found our color on the other end
+        while (rowToCheck < Constants.ROWS && columnToCheck < Constants.COLUMNS && !matchFound) {
+            
+            // Invalid move if adjacent tile is empty
+            if (board[rowToCheck][columnToCheck].getDiscColor() == Constants.EMPTY) {
                 return validMove;
+            }
             
-            //If the next square is of the opposite color, that square gets flipped.
-            else if (board[checkRow][checkCol].getDiscColor() != color)
-                flippedTiles++;
+            // If the next square is of the opposite color, that square gets flipped
+            else if (board[rowToCheck][columnToCheck].getDiscColor() != color) {
+                tilesToFlip++;
+            }
             
-            // Ends the flipping sequence since we've ran into a square that matches the player's color
-            else
+            // Ends the flipping sequence since we've ran into a square that matches the current player's color
+            else {
                 matchFound = true;
-            
-            //Check the next row and column.
-            checkRow++;
-            checkCol++;
-            
-        }//Closes while loop.
-        
-        //If the user move's is valid:
-        if (matchFound && flippedTiles > 0)
-        {
-            //Place the new disc.
-            board[row][col].setDiscColor(color);
-            
-            while (flippedTiles > 0)
-            {
-                //Bookkeeping.
-                row++;
-                col++;
-                flippedTiles--;
+            }
                 
-                //Update the disc color for the flipped discs.
-                board[row][col].setDiscColor(color);
-                
-            }//Closes while loop.
-            
-            //User move is valid.
-            validMove = true;
-            
-        }//Closes if statement.
+            // Check the row below and the column to the right
+            rowToCheck++;
+            columnToCheck++;
+        }
         
-        //User move is false.
-        else
+        // Valid move
+        if (matchFound && tilesToFlip > 0) {
+            board[selectedRow][selectedCol].setDiscColor(color);
+            
+            while (tilesToFlip > 0) {
+                selectedRow++;
+                selectedCol++;
+                tilesToFlip--;
+                
+                // Update the disc color for the flipped discs
+                board[selectedRow][selectedCol].setDiscColor(color);
+            }
+            validMove = true; 
+        } else {
             validMove = false;
-        
+        }
+
         return validMove;
-    }///Closes checkDownRight method.
+    }
     
-    /*
-        Row is the clicked row. Col is the clicked column. Color is the current player's disc color.
-        Method determines whether the discs can be flipped in this direction.
-    */
-    private boolean checkRight(int row, int col, Color color)
+    /**
+     * Determine whether discs can be flipped in the right direction
+     * 
+     * @param selectedRow the row of the selected tile
+     * @param selectedCol the column of the selected tile
+     * @param currentPlayerColor the color of the current player
+     * 
+     * @return whether the discs can be flipped in the right direction
+     */
+    private boolean checkRight(int selectedRow, int selectedCol, Color color)
     {
-        //Early initializations.
-        int flippedTiles = 0;
-        int checkCol = col + 1; //col+1 because we are not checking the current column.
         boolean matchFound = false;
         boolean validMove = false;
         
-        //If there are still columns to check and if we haven't found our color on the other end.
-        while (checkCol < Constants.COLUMNS && !matchFound)
-        {
-            //If the next square is empty, this is not a valid move.
-            if (board[row][checkCol].getDiscColor() == Constants.EMPTY)
+        int tilesToFlip = 0;
+        int columnToCheck = selectedCol + 1; // Don't check the current column
+        
+        // While there are still columns to check and if we haven't found our color on the other end
+        while (columnToCheck < Constants.COLUMNS && !matchFound) {
+            
+            // Invalid move if adjacent tile is empty
+            if (board[selectedRow][columnToCheck].getDiscColor() == Constants.EMPTY) {
                 return validMove;
+            }
             
-            //If the next square is of the opposite color, that square gets flipped.
-            else if (board[row][checkCol].getDiscColor() != color)
-                flippedTiles++;
-            
-            // Ends the flipping sequence since we've ran into a square that matches the player's color
-            else
+            // If the next square is of the opposite color, that square gets flipped
+            else if (board[selectedRow][columnToCheck].getDiscColor() != color) {
+                tilesToFlip++;
+            }
+                
+            // Ends the flipping sequence since we've ran into a square that matches the current player's color
+            else {
                 matchFound = true;
+            }
             
-            //Check the next column.
-            checkCol++;
-            
-        }//Closes while loop.
+            // Check the column to the right
+            columnToCheck++;
+        }
         
-        //If the user move's is valid:
-        if (matchFound && flippedTiles > 0)
-        {
-            //Place the new disc.
-            board[row][col].setDiscColor(color);
+        // Valid move
+        if (matchFound && tilesToFlip > 0) {
+            board[selectedRow][selectedCol].setDiscColor(color);
             
-            while (flippedTiles > 0)
-            {
-                //Bookkeeping.
-                col++;
-                flippedTiles--;
+            while (tilesToFlip > 0) {
+                selectedCol++;
+                tilesToFlip--;
                 
-                //Update the disc color for the flipped discs.
-                board[row][col].setDiscColor(color);
-                
-            }//Closes while loop.
-            
-            //User move is valid.
+                // Update the disc color for the flipped discs
+                board[selectedRow][selectedCol].setDiscColor(color);
+            }
             validMove = true;
-        }//Closes if statement.
-        
-        //User move is false.
-        else
+        } else {
             validMove = false;
+        }
         
         return validMove;
-    }///Closes checkRight method.
+    }
     
     
-    /*
-        Row is the clicked row. Col is the clicked column. Color is the current player's disc color.
-        Method determines whether the discs can be flipped in this direction.
-    */
+    /**
+     * Determine whether discs can be flipped in the left direction
+     * 
+     * @param selectedRow the row of the selected tile
+     * @param selectedCol the column of the selected tile
+     * @param currentPlayerColor the color of the current player
+     * 
+     * @return whether the discs can be flipped in the left direction
+     */
     private boolean checkUpRight(int row, int col, Color color)
     {
-        //Early initializations.
-        int flippedTiles = 0;
-        int checkRow = row - 1; //row-1 because we are not checking the current row.
-        int checkCol = col + 1;//col+1 because we are not checking the current column.
         boolean matchFound = false;
         boolean validMove = false;
+
+        int tilesToFlip = 0;
+        int rowToCheck = row - 1; // Don't check the current row 
+        int columnToCheck = col + 1; // Don't check current column
         
-        //If there are still rows and columns to check and if we haven't found our color on the other end.
-        while (checkRow >= 0 && checkCol < Constants.COLUMNS && !matchFound)
-        {
-            // If the next square is empty, this is not a valid move.
-            if (board[checkRow][checkCol].getDiscColor() == Constants.EMPTY)
+        // While there are still rows and columns to check and if we haven't found our color on the other end
+        while (rowToCheck >= 0 && columnToCheck < Constants.COLUMNS && !matchFound) {
+            
+            // Invalid move if adjacent tile is empty
+            if (board[rowToCheck][columnToCheck].getDiscColor() == Constants.EMPTY) {
                 return validMove;
+            }
+                
+            // If the next square is of the opposite color, that square gets flipped
+            else if (board[rowToCheck][columnToCheck].getDiscColor() != color) {
+                tilesToFlip++;
+            }
             
-            // If the next square is of the opposite color, that square gets flipped.
-            else if (board[checkRow][checkCol].getDiscColor() != color)
-                flippedTiles++;
-            
-            // Ends the flipping sequence since we've ran into a square that matches the player's color
-            else
+            // Ends the flipping sequence since we've ran into a square that matches the current player's color
+            else {
                 matchFound = true;
-            
-            //Check the next row and column.
-            checkRow--;
-            checkCol++;
-            
-        }//Closes while loop.
+            }
+
+            // Check the row above and the column to the right
+            rowToCheck--;
+            columnToCheck++;
+        }
         
-        //If the user move's is valid:
-        if (matchFound && flippedTiles > 0)
-        {
-            //Place the new disc.
+        // Valid move
+        if (matchFound && tilesToFlip > 0) {
             board[row][col].setDiscColor(color);
             
-            while (flippedTiles > 0)
-            {
-                //Bookkeeping.
+            while (tilesToFlip > 0) {
                 row--;
                 col++;
-                flippedTiles--;
+                tilesToFlip--;
                 
-                //Update the disc color for the flipped discs.
+                // Update the disc color for the flipped discs
                 board[row][col].setDiscColor(color);
-                
-            }//Closes while loop.
-            
-            //User move is valid.
+            }
             validMove = true;
-        }//Closes if statement.
-        
-        //User move is false.
-        else
+        } else {
             validMove = false;
+        }
         
         return validMove;
-    }///Closes checkUpRight method.
+    }
     
-    /*
-        This method determines whether the game can still continue.
-    */
-    public boolean gameOver(Color color, int darkScore, int lightScore)
+    /**
+     * Determine whether the game is over
+     * 
+     * @param currentPlayerColor the color of the current player
+     * @param darkScore the score of the dark player
+     * @param lightScore the score of the light player
+     * @return whether the game is over
+     */
+    public boolean gameOver(Color currentPlayerColor, int darkScore, int lightScore)
     {
-        //If the board is completely filled, then the game is automatically over.
-        if (darkScore + lightScore == 64)
+        // Game over if the board is full
+        if (darkScore + lightScore == 64) {
             return true;
-        
-        //Check if a player has lost all of their discs.
-        if (darkScore == 0 || lightScore == 0)
+        }
+            
+        // Game over if either player lost all of their chips
+        if (darkScore == 0 || lightScore == 0) {
             return true;
-
+        }
+            
         //This helper method will check whether the current player still has a valid move to be played
         //and will short-circuit and return false if there is still a valid move to be played.
-        if (hasMove(color))
+        if (hasMove(currentPlayerColor)) {
             return false;
-        
+        }
+            
         //Otherwise, the game has ended.
-        else
+        else {
             return true;
+        }
         
     }///Closes gameOver method.
     
@@ -704,14 +693,14 @@ public class Board
     private boolean validUp(int row, int col, Color color)
     {
         //There's no need to check the current square.
-        int checkRow = row - 1;
+        int rowToCheck = row - 1;
         
         //Make sure we are within array boundaries.
-        if (checkRow >= 0 && checkRow < Constants.ROWS)
+        if (rowToCheck >= 0 && rowToCheck < Constants.ROWS)
         {
             //The immediately adjacent square is empty or contains the same colored disc, so there is no valid move in this direction.
-            if (board[checkRow][col].getDiscColor() == Constants.EMPTY || //first parameter
-                board[checkRow][col].getDiscColor() == color) //second parameter
+            if (board[rowToCheck][col].getDiscColor() == Constants.EMPTY || //first parameter
+                board[rowToCheck][col].getDiscColor() == color) //second parameter
                 return false;
             
             //Otherwise, that immediately adjacent square must be occupied by an opposing disc.
@@ -720,12 +709,12 @@ public class Board
                 //For as long as we are inbounds and run into discs of the opposing color, then keep checking in this direction.
                 do
                 {
-                    checkRow--;
-                } while (checkRow >= 0 && board[checkRow][col].getDiscColor() != Constants.EMPTY //Two parameters.
-                         && board[checkRow][col].getDiscColor() != color); //One parameter.
+                    rowToCheck--;
+                } while (rowToCheck >= 0 && board[rowToCheck][col].getDiscColor() != Constants.EMPTY //Two parameters.
+                         && board[rowToCheck][col].getDiscColor() != color); //One parameter.
                 
                 //If the current square is out-of-bounds or empty, then the move is not valid.
-                if (checkRow < 0 || board[checkRow][col].getDiscColor() == Constants.EMPTY)
+                if (rowToCheck < 0 || board[rowToCheck][col].getDiscColor() == Constants.EMPTY)
                     return false;
                 
                 //Otherwise, the current square contains our color, making this a valid direction since we can surround the opposing discs.
@@ -747,15 +736,15 @@ public class Board
     private boolean validUpLeft(int row, int col, Color color)
     {
         //There's no need to check the current square.
-        int checkRow = row - 1;
-        int checkCol = col - 1;
+        int rowToCheck = row - 1;
+        int columnToCheck = col - 1;
         
         //Make sure we are within array boundaries.
-        if ( (checkRow >= 0 && checkRow < Constants.ROWS) && (checkCol >= 0 && checkCol < Constants.COLUMNS) )
+        if ( (rowToCheck >= 0 && rowToCheck < Constants.ROWS) && (columnToCheck >= 0 && columnToCheck < Constants.COLUMNS) )
         {
             //The immediately adjacent square is empty or contains the same colored disc, so there is no valid move in this direction.
-            if (board[checkRow][checkCol].getDiscColor() == Constants.EMPTY || //first parameter
-                board[checkRow][checkCol].getDiscColor() == color) //second parameter
+            if (board[rowToCheck][columnToCheck].getDiscColor() == Constants.EMPTY || //first parameter
+                board[rowToCheck][columnToCheck].getDiscColor() == color) //second parameter
                 return false;
             
             //Otherwise, that immediately adjacent square must be occupied by an opposing disc.
@@ -764,14 +753,14 @@ public class Board
                 //For as long as we are inbounds and run into discs of the opposing color, then keep checking in this direction.
                 do
                 {
-                    checkRow--;
-                    checkCol--;
-                } while (checkRow >= 0 && checkCol >= 0 && //Two parameters.
-                         board[checkRow][checkCol].getDiscColor() != Constants.EMPTY && //One parameter.
-                         board[checkRow][checkCol].getDiscColor() != color); //One parameter.
+                    rowToCheck--;
+                    columnToCheck--;
+                } while (rowToCheck >= 0 && columnToCheck >= 0 && //Two parameters.
+                         board[rowToCheck][columnToCheck].getDiscColor() != Constants.EMPTY && //One parameter.
+                         board[rowToCheck][columnToCheck].getDiscColor() != color); //One parameter.
                 
                 //If the current square is out-of-bounds or empty, then the move is not valid.
-                if (checkRow < 0 || checkCol < 0 || board[checkRow][checkCol].getDiscColor() == Constants.EMPTY)
+                if (rowToCheck < 0 || columnToCheck < 0 || board[rowToCheck][columnToCheck].getDiscColor() == Constants.EMPTY)
                     return false;
                 
                 //Otherwise, the current square contains our color, making this a valid direction since we can surround the opposing discs.
@@ -793,14 +782,14 @@ public class Board
     private boolean validLeft(int row, int col, Color color)
     {
         //There's no need to check the current square.
-        int checkCol = col - 1;
+        int columnToCheck = col - 1;
         
         //Make sure we are within array boundaries.
-        if (checkCol >= 0 && checkCol < Constants.COLUMNS)
+        if (columnToCheck >= 0 && columnToCheck < Constants.COLUMNS)
         {
             //The immediately adjacent square is empty or contains the same colored disc, so there is no valid move in this direction.
-            if (board[row][checkCol].getDiscColor() == Constants.EMPTY || //first parameter
-                board[row][checkCol].getDiscColor() == color) //second parameter
+            if (board[row][columnToCheck].getDiscColor() == Constants.EMPTY || //first parameter
+                board[row][columnToCheck].getDiscColor() == color) //second parameter
                 return false;
             
             //Otherwise, that immediately adjacent square must be occupied by an opposing disc.
@@ -809,12 +798,12 @@ public class Board
                 //For as long as we are inbounds and run into discs of the opposing color, then keep checking in this direction.
                 do
                 {
-                    checkCol--;
-                } while (checkCol >= 0 && board[row][checkCol].getDiscColor() != Constants.EMPTY //Two parameters.
-                         && board[row][checkCol].getDiscColor() != color); //One parameter.
+                    columnToCheck--;
+                } while (columnToCheck >= 0 && board[row][columnToCheck].getDiscColor() != Constants.EMPTY //Two parameters.
+                         && board[row][columnToCheck].getDiscColor() != color); //One parameter.
                 
                 //If the current square is out-of-bounds or empty, then the move is not valid.
-                if (checkCol < 0 || board[row][checkCol].getDiscColor() == Constants.EMPTY)
+                if (columnToCheck < 0 || board[row][columnToCheck].getDiscColor() == Constants.EMPTY)
                     return false;
                 
                 //Otherwise, the current square contains our color, making this a valid direction since we can surround the opposing discs.
@@ -836,15 +825,15 @@ public class Board
     private boolean validDownLeft(int row, int col, Color color)
     {
         //There's no need to check the current square.
-        int checkRow = row + 1;
-        int checkCol = col - 1;
+        int rowToCheck = row + 1;
+        int columnToCheck = col - 1;
         
         //Make sure we are within array boundaries.
-        if ( (checkRow >= 0 && checkRow < Constants.ROWS) && (checkCol >= 0 && checkCol < Constants.COLUMNS) )
+        if ( (rowToCheck >= 0 && rowToCheck < Constants.ROWS) && (columnToCheck >= 0 && columnToCheck < Constants.COLUMNS) )
         {
             //The immediately adjacent square is empty or contains the same colored disc, so there is no valid move in this direction.
-            if (board[checkRow][checkCol].getDiscColor() == Constants.EMPTY || //first parameter
-                board[checkRow][checkCol].getDiscColor() == color) //second parameter
+            if (board[rowToCheck][columnToCheck].getDiscColor() == Constants.EMPTY || //first parameter
+                board[rowToCheck][columnToCheck].getDiscColor() == color) //second parameter
                 return false;
             
             //Otherwise, that immediately adjacent square must be occupied by an opposing disc.
@@ -853,14 +842,14 @@ public class Board
                 //For as long as we are inbounds and run into discs of the opposing color, then keep checking in this direction.
                 do
                 {
-                    checkRow++;
-                    checkCol--;
-                } while (checkRow < Constants.ROWS && checkCol >= 0 && //Two parameters.
-                         board[checkRow][checkCol].getDiscColor() != Constants.EMPTY && //One parameter.
-                         board[checkRow][checkCol].getDiscColor() != color); //One parameter.
+                    rowToCheck++;
+                    columnToCheck--;
+                } while (rowToCheck < Constants.ROWS && columnToCheck >= 0 && //Two parameters.
+                         board[rowToCheck][columnToCheck].getDiscColor() != Constants.EMPTY && //One parameter.
+                         board[rowToCheck][columnToCheck].getDiscColor() != color); //One parameter.
                 
                 //If the current square is out-of-bounds or empty, then the move is not valid.
-                if (checkRow >= Constants.ROWS || checkCol < 0 || board[checkRow][checkCol].getDiscColor() == Constants.EMPTY)
+                if (rowToCheck >= Constants.ROWS || columnToCheck < 0 || board[rowToCheck][columnToCheck].getDiscColor() == Constants.EMPTY)
                     return false;
                 
                 //Otherwise, the current square contains our color, making this a valid direction since we can surround the opposing discs.
@@ -882,14 +871,14 @@ public class Board
     private boolean validDown(int row, int col, Color color)
     {
         //There's no need to check the current square.
-        int checkRow = row + 1;
+        int rowToCheck = row + 1;
         
         //Make sure we are within array boundaries.
-        if (checkRow >= 0 && checkRow < Constants.ROWS)
+        if (rowToCheck >= 0 && rowToCheck < Constants.ROWS)
         {
             //The immediately adjacent square is empty or contains the same colored disc, so there is no valid move in this direction.
-            if (board[checkRow][col].getDiscColor() == Constants.EMPTY || //first parameter
-                board[checkRow][col].getDiscColor() == color) //second parameter
+            if (board[rowToCheck][col].getDiscColor() == Constants.EMPTY || //first parameter
+                board[rowToCheck][col].getDiscColor() == color) //second parameter
                 return false;
             
             //Otherwise, that immediately adjacent square must be occupied by an opposing disc.
@@ -898,12 +887,12 @@ public class Board
                 //For as long as we are inbounds and run into discs of the opposing color, then keep checking in this direction.
                 do
                 {
-                    checkRow++;
-                } while (checkRow < Constants.ROWS && board[checkRow][col].getDiscColor() != Constants.EMPTY //Two parameters.
-                         && board[checkRow][col].getDiscColor() != color); //One parameter.
+                    rowToCheck++;
+                } while (rowToCheck < Constants.ROWS && board[rowToCheck][col].getDiscColor() != Constants.EMPTY //Two parameters.
+                         && board[rowToCheck][col].getDiscColor() != color); //One parameter.
                 
                 //If the current square is out-of-bounds or empty, then the move is not valid.
-                if (checkRow >= Constants.ROWS || board[checkRow][col].getDiscColor() == Constants.EMPTY)
+                if (rowToCheck >= Constants.ROWS || board[rowToCheck][col].getDiscColor() == Constants.EMPTY)
                     return false;
                 
                 //Otherwise, the current square contains our color, making this a valid direction since we can surround the opposing discs.
@@ -925,15 +914,15 @@ public class Board
     private boolean validDownRight(int row, int col, Color color)
     {
         //There's no need to check the current square.
-        int checkRow = row + 1;
-        int checkCol = col + 1;
+        int rowToCheck = row + 1;
+        int columnToCheck = col + 1;
         
         //Make sure we are within array boundaries.
-        if ( (checkRow >= 0 && checkRow < Constants.ROWS) && (checkCol >= 0 && checkCol < Constants.COLUMNS) )
+        if ( (rowToCheck >= 0 && rowToCheck < Constants.ROWS) && (columnToCheck >= 0 && columnToCheck < Constants.COLUMNS) )
         {
             //The immediately adjacent square is empty or contains the same colored disc, so there is no valid move in this direction.
-            if (board[checkRow][checkCol].getDiscColor() == Constants.EMPTY || //first parameter
-                board[checkRow][checkCol].getDiscColor() == color) //second parameter
+            if (board[rowToCheck][columnToCheck].getDiscColor() == Constants.EMPTY || //first parameter
+                board[rowToCheck][columnToCheck].getDiscColor() == color) //second parameter
                 return false;
             
             //Otherwise, that immediately adjacent square must be occupied by an opposing disc.
@@ -942,14 +931,14 @@ public class Board
                 //For as long as we are inbounds and run into discs of the opposing color, then keep checking in this direction.
                 do
                 {
-                    checkRow++;
-                    checkCol++;
-                } while (checkRow < Constants.ROWS && checkCol < Constants.COLUMNS && //Two parameters.
-                         board[checkRow][checkCol].getDiscColor() != Constants.EMPTY && //One parameter.
-                         board[checkRow][checkCol].getDiscColor() != color); //One parameter.
+                    rowToCheck++;
+                    columnToCheck++;
+                } while (rowToCheck < Constants.ROWS && columnToCheck < Constants.COLUMNS && //Two parameters.
+                         board[rowToCheck][columnToCheck].getDiscColor() != Constants.EMPTY && //One parameter.
+                         board[rowToCheck][columnToCheck].getDiscColor() != color); //One parameter.
                 
                 //If the current square is out-of-bounds or empty, then the move is not valid.
-                if (checkRow >= Constants.ROWS || checkCol >= Constants.COLUMNS || board[checkRow][checkCol].getDiscColor() == Constants.EMPTY)
+                if (rowToCheck >= Constants.ROWS || columnToCheck >= Constants.COLUMNS || board[rowToCheck][columnToCheck].getDiscColor() == Constants.EMPTY)
                     return false;
                 
                 //Otherwise, the current square contains our color, making this a valid direction since we can surround the opposing discs.
@@ -971,14 +960,14 @@ public class Board
     private boolean validRight(int row, int col, Color color)
     {
         //There's no need to check the current square.
-        int checkCol = col + 1;
+        int columnToCheck = col + 1;
         
         //Make sure we are within array boundaries.
-        if (checkCol >= 0 && checkCol < Constants.COLUMNS)
+        if (columnToCheck >= 0 && columnToCheck < Constants.COLUMNS)
         {
             //The immediately adjacent square is empty or contains the same colored disc, so there is no valid move in this direction.
-            if (board[row][checkCol].getDiscColor() == Constants.EMPTY || //first parameter
-                board[row][checkCol].getDiscColor() == color) //second parameter
+            if (board[row][columnToCheck].getDiscColor() == Constants.EMPTY || //first parameter
+                board[row][columnToCheck].getDiscColor() == color) //second parameter
                 return false;
             
             //Otherwise, that immediately adjacent square must be occupied by an opposing disc.
@@ -987,12 +976,12 @@ public class Board
                 //For as long as we are inbounds and run into discs of the opposing color, then keep checking in this direction.
                 do
                 {
-                    checkCol++;
-                } while (checkCol < Constants.COLUMNS && board[row][checkCol].getDiscColor() != Constants.EMPTY //Two parameters.
-                         && board[row][checkCol].getDiscColor() != color); //One parameter.
+                    columnToCheck++;
+                } while (columnToCheck < Constants.COLUMNS && board[row][columnToCheck].getDiscColor() != Constants.EMPTY //Two parameters.
+                         && board[row][columnToCheck].getDiscColor() != color); //One parameter.
                 
                 //If the current square is out-of-bounds or empty, then the move is not valid.
-                if (checkCol >= Constants.COLUMNS || board[row][checkCol].getDiscColor() == Constants.EMPTY)
+                if (columnToCheck >= Constants.COLUMNS || board[row][columnToCheck].getDiscColor() == Constants.EMPTY)
                     return false;
                 
                 //Otherwise, the current square contains our color, making this a valid direction since we can surround the opposing discs.
@@ -1014,15 +1003,15 @@ public class Board
     private boolean validUpRight(int row, int col, Color color)
     {
         //There's no need to check the current square.
-        int checkRow = row - 1;
-        int checkCol = col + 1;
+        int rowToCheck = row - 1;
+        int columnToCheck = col + 1;
         
         //Make sure we are within array boundaries.
-        if ( (checkRow >= 0 && checkRow < Constants.ROWS) && (checkCol >= 0 && checkCol < Constants.COLUMNS) )
+        if ( (rowToCheck >= 0 && rowToCheck < Constants.ROWS) && (columnToCheck >= 0 && columnToCheck < Constants.COLUMNS) )
         {
             //The immediately adjacent square is empty or contains the same colored disc, so there is no valid move in this direction.
-            if (board[checkRow][checkCol].getDiscColor() == Constants.EMPTY || //first parameter
-                board[checkRow][checkCol].getDiscColor() == color) //second parameter
+            if (board[rowToCheck][columnToCheck].getDiscColor() == Constants.EMPTY || //first parameter
+                board[rowToCheck][columnToCheck].getDiscColor() == color) //second parameter
                 return false;
             
             //Otherwise, that immediately adjacent square must be occupied by an opposing disc.
@@ -1031,14 +1020,14 @@ public class Board
                 //For as long as we are inbounds and run into discs of the opposing color, then keep checking in this direction.
                 do
                 {
-                    checkRow--;
-                    checkCol++;
-                } while (checkRow >= 0 && checkCol < Constants.COLUMNS && //Two parameters.
-                         board[checkRow][checkCol].getDiscColor() != Constants.EMPTY && //One parameter.
-                         board[checkRow][checkCol].getDiscColor() != color); //One parameter.
+                    rowToCheck--;
+                    columnToCheck++;
+                } while (rowToCheck >= 0 && columnToCheck < Constants.COLUMNS && //Two parameters.
+                         board[rowToCheck][columnToCheck].getDiscColor() != Constants.EMPTY && //One parameter.
+                         board[rowToCheck][columnToCheck].getDiscColor() != color); //One parameter.
                 
                 //If the current square is out-of-bounds or empty, then the move is not valid.
-                if (checkRow < 0 || checkCol >= Constants.COLUMNS || board[checkRow][checkCol].getDiscColor() == Constants.EMPTY)
+                if (rowToCheck < 0 || columnToCheck >= Constants.COLUMNS || board[rowToCheck][columnToCheck].getDiscColor() == Constants.EMPTY)
                     return false;
                 
                 //Otherwise, the current square contains our color, making this a valid direction since we can surround the opposing discs.
