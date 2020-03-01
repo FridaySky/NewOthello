@@ -1,11 +1,5 @@
-/*
- * Kevin Tran
- * COP 3330, Section 0001
- * University of Central Florida
- */
 package userInterface;
 
-///Imports.
 import core.Constants;
 import core.Game;
 import core.Player;
@@ -17,29 +11,21 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-/**
- *
- * @author Kevin Tran
- */
-public class GameUi extends JPanel
-{
-    //Member variables.
-    private Game game;
-    private JLabel nameOne;
-    private JLabel nameTwo;
-    private JLabel scoreOne;
-    private JLabel scoreTwo;
+public class GameUi extends JPanel {
     
-    //Constructor that links project code and calls initComponents.
+    /**
+     * 
+     * @param game the current game
+     */
     public GameUi(Game game)
     {
         this.game = game;
         initComponents();
     }
     
-    /*
-        Defines information for the players' discs.
-    */
+    /**
+     * Show player information (e.g,. names, images, scores)
+     */
     private void initComponents()
     {
         //Set dimensions of grid.
@@ -47,11 +33,13 @@ public class GameUi extends JPanel
         this.setMinimumSize(new Dimension(800, 80));
         this.setBackground(Color.ORANGE);
         
-        //discOne is the dark color, and discTwo is the light color.
+        // discOne is the dark color, and discTwo is the light color.
         ImageIcon discOne = new ImageIcon(getClass().getResource("BlackPuckFinalized.png"));
+        ImageIcon discTwo = new ImageIcon(getClass().getResource("WhitePillFinalized.png"));
         discOne = imageResize(discOne);
+        discTwo = imageResize(discTwo);
         
-        //Player one's information to be displayed at the top.
+        // Show player one's information (to be displayed at the top)
         nameOne = new JLabel();
         nameOne.setIcon(discOne);
         nameOne.setText(getGame().getPlayerList().get(Constants.PLAYER_ONE).getName());
@@ -62,11 +50,7 @@ public class GameUi extends JPanel
         scoreOne = new JLabel();
         scoreOne.setFont(new Font("Serif", Font.BOLD, 22));
         
-        //discOne is the dark color, and discTwo is the light color.
-        ImageIcon discTwo = new ImageIcon(getClass().getResource("WhitePillFinalized.png"));
-        discTwo = imageResize(discTwo);
-        
-        //Player two's information to be displayed at the top.
+        // Show player two's information (to be displayed at the top)
         nameTwo = new JLabel();
         nameTwo.setIcon(discTwo);
         nameTwo.setText(getGame().getPlayerList().get(Constants.PLAYER_TWO).getName());
@@ -77,23 +61,25 @@ public class GameUi extends JPanel
         scoreTwo = new JLabel();
         scoreTwo.setFont(new Font("Serif", Font.BOLD, 22));
         
-        //Add all four JLabel instances to the JPanel.
+        // Add all four JLabel instances to the JPanel
         this.add(nameOne);
         this.add(scoreOne);
         this.add(nameTwo);
         this.add(scoreTwo);
-    }///Closes initComponents method.
+    }
 
-    /*
-        This method serves to resize the images used for the discs.
-    */
-    private ImageIcon imageResize(ImageIcon icon)
-    {
+    /**
+     * Resize the images used for the player discs
+     * 
+     * @param icon the original image
+     * @return the resized image
+     */
+    private ImageIcon imageResize(ImageIcon icon) {
         Image image = icon.getImage();
         Image newImage = image.getScaledInstance(60, 60, java.awt.Image.SCALE_SMOOTH);
         icon = new ImageIcon(newImage);
         return icon;
-    }///Closes imageIcon method.
+    }
 
     /**
      * @return the game
@@ -112,7 +98,7 @@ public class GameUi extends JPanel
     }
 
     /**
-     * @return the scoreOne
+     * @return the first player's score
      */
     public JLabel getScoreOne()
     {
@@ -120,7 +106,7 @@ public class GameUi extends JPanel
     }
 
     /**
-     * @param scoreOne the scoreOne to set
+     * @param scoreOne the first player's score
      */
     public void setScoreOne(JLabel scoreOne)
     {
@@ -128,19 +114,22 @@ public class GameUi extends JPanel
     }
 
     /**
-     * @return the scoreTwo
+     * @return the second player's score
      */
-    public JLabel getScoreTwo()
-    {
+    public JLabel getScoreTwo() {
         return scoreTwo;
     }
 
     /**
-     * @param scoreTwo the scoreTwo to set
+     * @param scoreTwo the second player's score
      */
-    public void setScoreTwo(JLabel scoreTwo)
-    {
+    public void setScoreTwo(JLabel scoreTwo) {
         this.scoreTwo = scoreTwo;
     }
     
-}///Closes class GameUi.
+    private Game game;
+    private JLabel nameOne;
+    private JLabel nameTwo;
+    private JLabel scoreOne;
+    private JLabel scoreTwo;
+}
